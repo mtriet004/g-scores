@@ -208,6 +208,7 @@ dd {
     overflow-x: auto;
     border: 1px solid var(--line);
     border-radius: 0.5rem;
+    background: #fff;
 }
 
 .scroll-hint {
@@ -249,6 +250,12 @@ tbody tr:last-child > * {
     --rank-width: 4.5rem;
     min-width: 38rem;
     table-layout: fixed;
+    background: #fff;
+}
+
+.ranking-table tbody th,
+.ranking-table tbody td {
+    background: #fff;
 }
 
 .ranking-table tr > :first-child {
