@@ -7,7 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class GScoresApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(GScoresApplication.class, args);
+		var context = SpringApplication.run(GScoresApplication.class, args);
+		if (context.getEnvironment().matchesProfiles("seed")) {
+			context.close();
+		}
 	}
 
 }

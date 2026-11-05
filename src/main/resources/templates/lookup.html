@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/shell :: head('Tra cứu điểm')}"></head>
+<body>
+<header th:replace="~{fragments/shell :: header('lookup')}"></header>
+<main class="shell">
+    <p class="eyebrow">KỲ THI TỐT NGHIỆP THPT 2024</p>
+    <h1>Tra cứu điểm thi</h1>
+    <p class="intro">Nhập số báo danh để xem kết quả theo từng môn.</p>
+    <section class="card" aria-label="Tra cứu theo số báo danh">
+        <form th:action="@{/}" method="get">
+            <label for="sbd">Số báo danh</label>
+            <div class="form-row">
+                <input id="sbd" name="sbd" type="text" inputmode="numeric" autocomplete="off"
+                       required placeholder="Ví dụ 01000001" th:value="${sbd}">
+                <button type="submit">Tra cứu</button>
+            </div>
+        </form>
+        <p class="notice" role="status" th:if="${message != null}" th:text="${message}"></p>
+    </section>
+    <section class="card" th:if="${result != null}">
+        <h2>Kết quả của <span th:text="${result.sbd}"></span></h2>
+        <p th:if="${result.maNgoaiNgu != null}">Mã ngoại ngữ <strong th:text="${result.maNgoaiNgu}"></strong></p>
+        <dl class="score-grid">
+            <div th:each="subject : ${subjects}" th:with="score=${subject.scoreOf(result)}">
+                <dt th:text="${subject.label}"></dt>
+                <dd th:text="${score == null ? '—' : score.toPlainString()}"></dd>
+            </div>
+        </dl>
+    </section>
+</main>
+</body>
+</html>

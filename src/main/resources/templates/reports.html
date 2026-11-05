@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/shell :: head('Báo cáo điểm')}"></head>
+<body>
+<header th:replace="~{fragments/shell :: header('reports')}"></header>
+<main class="shell">
+    <p class="eyebrow">KỲ THI TỐT NGHIỆP THPT 2024</p>
+    <h1>Phân bố điểm theo môn</h1>
+    <p class="intro">Số thí sinh có điểm ở từng mức.</p>
+    <section class="card">
+        <form th:action="@{/reports}" method="get">
+            <label for="subject">Môn học</label>
+            <div class="form-row">
+                <select name="subject" id="subject">
+                    <option th:each="subject : ${subjects}" th:value="${subject.code}"
+                            th:selected="${subject == selectedSubject}" th:text="${subject.label}"></option>
+                </select>
+                <button type="submit">Xem báo cáo</button>
+            </div>
+        </form>
+        <h2 th:text="${selectedSubject.label}"></h2>
+        <div class="chart"><canvas id="score-chart" role="img" aria-label="Biểu đồ số thí sinh theo mức điểm"></canvas></div>
+        <table id="score-bands">
+            <thead><tr><th scope="col">Mức điểm</th><th scope="col">Số thí sinh</th></tr></thead>
+            <tbody>
+            <tr th:each="band : ${bands}">
+                <th scope="row" th:text="${band.label}"></th>
+                <td th:text="${band.count}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+<script defer th:src="@{/vendor/chartjs/dist/chart.umd.js}"></script>
+<script defer th:src="@{/reports.js}"></script>
+</body>
+</html>

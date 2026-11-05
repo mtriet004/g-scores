@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' | G-Scores'">G-Scores</title>
+    <link rel="stylesheet" th:href="@{/app.css}">
+</head>
+<body>
+<header class="site-header" th:fragment="header(active)">
+    <div class="shell header-content">
+        <a class="brand" th:href="@{/}">G<span>·</span>Scores</a>
+        <nav aria-label="Điều hướng chính">
+            <a th:href="@{/}" th:attr="aria-current=${active == 'lookup' ? 'page' : null}">Tra cứu</a>
+            <a th:href="@{/reports}" th:attr="aria-current=${active == 'reports' ? 'page' : null}">Báo cáo</a>
+            <a th:href="@{/top-10}" th:attr="aria-current=${active == 'top' ? 'page' : null}">Top 10 khối A</a>
+        </nav>
+    </div>
+</header>
+</body>
+</html>
