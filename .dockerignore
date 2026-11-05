@@ -1,0 +1,11 @@
+.git
+.github
+.idea
+.vscode
+target
+dataset
+docs
+.env
+.env.*
+README.md
+HUONG-DAN-G-SCORES.md

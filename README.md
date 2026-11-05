@@ -2,7 +2,48 @@
 
 Ứng dụng tra cứu kết quả kỳ thi tốt nghiệp THPT 2024. Giao diện dùng Thymeleaf và Chart.js. Spring Data JPA truy vấn PostgreSQL, còn Flyway quản lý cấu trúc bảng.
 
-## Chạy local
+## Chạy bằng Docker Compose
+
+Cài Docker Desktop và bật Linux containers. Tải CSV gốc vào `dataset/diem_thi_thpt_2024.csv` như hướng dẫn bên dưới. Thực hiện các lệnh trong thư mục gốc của repo.
+
+1. Nếu chưa có `.env`, tạo file cấu hình local, mở file và đặt `POSTGRES_PASSWORD` thành mật khẩu của bạn. Nếu đã có `.env`, dùng lại file hiện tại. Cổng web mặc định là `8082`, có thể đổi bằng `GSCORES_HTTP_PORT`.
+
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+
+2. Build image ứng dụng. Docker tự build bằng JDK 21 và Maven Wrapper, sau đó tạo image chạy bằng JRE 21.
+
+   ```powershell
+   docker compose build app
+   ```
+
+3. Nhập CSV. Compose khởi động PostgreSQL, chờ healthcheck thành công rồi chạy seeder. Khi hoàn tất, seeder báo `Imported 1061605 exam results.` và thoát. Có thể chạy lại lệnh này để xác nhận seeder bỏ qua dữ liệu đã có.
+
+   ```powershell
+   docker compose run --rm seed
+   ```
+
+4. Khởi động web và theo dõi log. Khi xuất hiện `Tomcat started`, mở [localhost:8082](http://localhost:8082/).
+
+   ```powershell
+   docker compose up -d app
+   docker compose logs -f app
+   ```
+
+   Nhấn `Ctrl+C` để thoát màn hình log. Container vẫn chạy nền. Xem trạng thái bằng `docker compose ps`.
+
+PostgreSQL trong Compose lưu dữ liệu vào named volume. Sau khi đã khởi tạo volume, dùng lại mật khẩu trong `.env` ở các lần chạy sau. Thay giá trị trong `.env` sẽ không tự đổi mật khẩu role đã tồn tại. Image PostgreSQL 18 lưu dữ liệu dưới `/var/lib/postgresql/18/docker`, nên volume được gắn tại `/var/lib/postgresql`. [Tài liệu image PostgreSQL](https://hub.docker.com/_/postgres)
+
+Dừng bộ container bằng `docker compose down`, rồi chạy lại bằng `docker compose up -d app`. Dữ liệu đã seed vẫn còn trong volume. Có thể kiểm tra số dòng bằng lệnh sau.
+
+```powershell
+docker compose exec db psql -U gscores -d gscores -c "SELECT count(*) FROM exam_results;"
+```
+
+Sau khi sửa source, chạy `docker compose up -d --build app` để build và thay container ứng dụng. Nếu báo không kết nối được Docker daemon hoặc Docker đang paused, mở Docker Desktop và Resume trước khi chạy lại. Nếu cổng web đang bận, đổi `GSCORES_HTTP_PORT` trong `.env`, rồi chạy lại `docker compose up -d app`.
+
+## Chạy local bằng Java
 
 Yêu cầu JDK 21 trở lên và PostgreSQL đang chạy. Maven Wrapper nằm sẵn trong repo. Các lệnh dưới đây dùng PowerShell tại thư mục gốc của project. Trên macOS hoặc Linux, dùng `./mvnw` và `export` để đặt biến môi trường.
 
