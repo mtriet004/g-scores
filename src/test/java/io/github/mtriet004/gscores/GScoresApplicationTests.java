@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.regex.Pattern;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +27,22 @@ class GScoresApplicationTests {
     @Autowired MockMvc mvc;
     @Autowired ScoreReport reports;
     @Autowired ExamResultRepository results;
+
+    @Test
+    void pagesReferenceStylesheetByItsContentVersion() throws Exception {
+        String html = mvc.perform(get("/top-10")).andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        var stylesheet = Pattern.compile("href=\"(/app-[a-f0-9]{32}\\.css)\"").matcher(html);
+        assertThat(stylesheet.find()).isTrue();
+        mvc.perform(get(stylesheet.group(1))).andExpect(status().isOk())
+                .andExpect(content().string(containsString(".ranking-table tbody td")));
+        String reportHtml = mvc.perform(get("/reports")).andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        var script = Pattern.compile("src=\"(/reports-[a-f0-9]{32}\\.js)\"").matcher(reportHtml);
+        assertThat(script.find()).isTrue();
+        mvc.perform(get(script.group(1))).andExpect(status().isOk())
+                .andExpect(content().string(containsString("new Chart")));
+    }
 
     @Test
     void lookupPreservesRegistrationNumberAndDistinguishesMissingScores() throws Exception {
