@@ -7,9 +7,12 @@
     <p class="eyebrow">KỲ THI TỐT NGHIỆP THPT 2024</p>
     <h1>Top 10 khối A</h1>
     <p class="intro">Xếp hạng theo tổng điểm Toán, Vật lí và Hóa học.</p>
-    <section class="card table-wrap" aria-label="Bảng xếp hạng khối A">
+    <section class="card" aria-label="Bảng xếp hạng khối A">
         <p th:if="${ranking.isEmpty()}">Chưa có dữ liệu xếp hạng.</p>
-        <table th:unless="${ranking.isEmpty()}">
+        <p id="ranking-scroll-hint" class="scroll-hint" th:unless="${ranking.isEmpty()}">Vuốt ngang để xem đủ điểm các môn và tổng điểm.</p>
+        <div class="table-scroll" role="region" aria-label="Điểm của 10 thí sinh khối A"
+             aria-describedby="ranking-scroll-hint" tabindex="0" th:unless="${ranking.isEmpty()}">
+        <table class="ranking-table">
             <thead>
             <tr>
                 <th scope="col">Hạng</th><th scope="col">SBD</th><th scope="col">Toán</th>
@@ -27,6 +30,7 @@
             </tr>
             </tbody>
         </table>
+        </div>
     </section>
 </main>
 </body>
