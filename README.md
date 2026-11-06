@@ -2,6 +2,8 @@
 
 Ứng dụng tra cứu kết quả kỳ thi tốt nghiệp THPT 2024. Giao diện dùng Thymeleaf và Chart.js. Spring Data JPA truy vấn PostgreSQL, còn Flyway quản lý cấu trúc bảng.
 
+[Demo online trên Railway](https://g-scores-production-299a.up.railway.app/)
+
 ## Chạy bằng Docker Compose
 
 Cài Docker Desktop và bật Linux containers. Tải CSV gốc vào `dataset/diem_thi_thpt_2024.csv` như hướng dẫn bên dưới. Thực hiện các lệnh trong thư mục gốc của repo.
@@ -68,7 +70,7 @@ Yêu cầu JDK 21 trở lên và PostgreSQL đang chạy. Maven Wrapper nằm s�
 
    ```powershell
    .\mvnw.cmd -DskipTests package
-   java -jar target/g-scores-0.0.1-SNAPSHOT.jar --spring.profiles.active=seed
+   java "-Duser.timezone=UTC" -jar target/g-scores-0.0.1-SNAPSHOT.jar --spring.profiles.active=seed
    ```
 
 4. Chạy ứng dụng và mở [G-Scores](http://localhost:8080/).
